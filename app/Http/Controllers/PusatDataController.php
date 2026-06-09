@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PusatData;
+use App\Models\PusatData; // Pastikan model diimpor dengan benar
 use Illuminate\Http\Request;
 
 class PusatDataController extends Controller
 {
     /**
-     * Menampilkan daftar pusat data (Opsional jika ingin dipisahkan dari Dashboard)
+     * Menampilkan daftar pusat data untuk pengunjung umum (Publik).
      */
     public function index()
     {
+        // Mengambil seluruh data dokumen dari database db_mpm_laravel
         $pusat_data = PusatData::orderBy('id', 'asc')->get();
-        return view('admin.pusat-data.index', compact('pusat_data'));
+        
+        // Diarahkan ke view folder publik: resources/views/pusatdata/index.blade.php
+        return view('pusatdata.index', compact('pusat_data'));
     }
 
     /**
-     * Menyimpan dokumen baru ke dalam database.
+     * Menyimpan dokumen baru dari form Dashboard ke database.
      */
     public function store(Request $request)
     {
-        // Validasi input data dokumen
         $request->validate([
             'nama_dokumen' => 'required|string|max:255',
             'url_link'     => 'required|url|max:500',
         ]);
 
-        // Menyimpan ke database
         PusatData::create([
             'nama_dokumen' => $request->nama_dokumen,
             'url_link'     => $request->url_link,
@@ -37,11 +38,10 @@ class PusatDataController extends Controller
     }
 
     /**
-     * Memperbarui data dokumen yang sudah ada di database.
+     * Memperbarui data dokumen melalui modal Dashboard.
      */
     public function update(Request $request, $id)
     {
-        // Validasi input data dokumen
         $request->validate([
             'nama_dokumen' => 'required|string|max:255',
             'url_link'     => 'required|url|max:500',
@@ -49,7 +49,6 @@ class PusatDataController extends Controller
 
         $dokumen = PusatData::findOrFail($id);
         
-        // Melakukan update data
         $dokumen->update([
             'nama_dokumen' => $request->nama_dokumen,
             'url_link'     => $request->url_link,
