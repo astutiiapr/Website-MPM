@@ -1,0 +1,27 @@
+name: Deploy Laravel ke InfinityFree
+on:
+  push:
+    branches:
+      - main
+jobs:
+  web-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Mengambil kode terbaru
+        uses: actions/checkout@v3
+
+      - name: 📦 Install PHP & Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: 🔨 Menjalankan Composer Install
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: 📂 Upload via FTP ke InfinityFree
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /htdocs/
