@@ -8,29 +8,46 @@
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
   
   <style>
-    /* Navbar Styling menyesuaikan tema utama */
     .navbar {
       position: fixed;
       width: 100%;
       padding: 20px;
       transition: 0.3s;
-      background: #002244; /* Warna biru gelap / Dongker */
+      background: #002244;
       z-index: 999;
       top: 0;
       box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    /* Bagian Konten Pusat Data */
+    .navbar .logo img {
+      height: 40px;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #66b3ff;
+    }
+
     .pusat-data-section {
-      padding: 140px 20px 80px; /* Padding atas diperbesar agar tidak tertabrak navbar */
+      padding: 140px 20px 80px;
       max-width: 1100px;
       margin: 0 auto;
       text-align: center;
       font-family: sans-serif;
+      min-height: 70vh;
     }
 
     .pusat-data-section h2 {
-      color: #003366; /* Tema biru */
+      color: #003366;
       font-size: 2.5em;
       margin-bottom: 10px;
     }
@@ -41,14 +58,12 @@
       font-size: 1.1em;
     }
 
-    /* Grid Layout (Membuat kotak-kotak menyamping) */
     .data-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 25px;
     }
 
-    /* Styling Kotak/Card */
     .data-card {
       display: flex;
       align-items: center;
@@ -60,18 +75,46 @@
       color: #003366;
       font-weight: bold;
       font-size: 1.15em;
-      border-left: 8px solid #00509E; /* Garis aksen biru di sebelah kiri */
+      border-left: 8px solid #00509E;
       box-shadow: 0 4px 15px rgba(0,0,0,0.06);
       transition: all 0.3s ease;
     }
 
-    /* Efek saat kursor diarahkan ke kotak (Hover) */
     .data-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(0, 80, 158, 0.2);
-      background: #00509E; /* Latar berubah jadi biru */
-      color: #ffffff; /* Teks berubah jadi putih */
+      background: #00509E;
+      color: #ffffff;
       border-left-color: #002244;
+    }
+
+    .footer {
+      background-color: #001122;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .footer .socials a {
+      color: #66b3ff;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .footer .socials a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -80,7 +123,7 @@
   <!-- NAVBAR -->
   <header class="navbar">
     <div class="logo">
-      <img src="{{ asset('assets/logo-mpm.png') }}" alt="Logo MPM" style="height: 40px;">
+      <img src="{{ asset('logo-mpm.png') }}" alt="Logo MPM" onerror="this.onerror=null; this.src='https://placehold.co/60x60?text=MPM';">
     </div>
     
     <nav class="nav-links">
@@ -100,37 +143,15 @@
       <p>Kumpulan arsip dokumen, peraturan, dan layanan administrasi Majelis Permusyawaratan Mahasiswa.</p>
 
       <div class="data-grid">
-        
-        <!-- 1. Link Google Drive AD/ART -->
-        <a href="https://drive.google.com/drive/folders/1mIfsh0QKFnoOkMzX6xK7BF6kFKcFJBxc?usp=sharing" target="_blank" class="data-card">
-          AD/ART IKM PNJ
-        </a>
-
-        <!-- 2. Link Peraturan PNJ -->
-        <a href="https://drive.google.com/drive/folders/1k8Yfog-L-V-ryagkhwqj-2ElGCIzweEt?usp=sharing" target="_blank" class="data-card">
-          Peraturan PNJ
-        </a>
-
-        <!-- 3. Link Perpustakaan TAP -->
-        <a href="https://drive.google.com/drive/folders/1xdPAjzZEjpYYBpi8NWZpXozLZNGIHhLZ?usp=sharing" target="_blank" class="data-card">
-          Perpustakaan TAP MPM
-        </a>
-
-        <!-- 4. Link Form Perizinan -->
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfRAvucPKsvyusk0ljPsrsvXBdl7uadBBEf0oXkt8ndSjvFDg/viewform" target="_blank" class="data-card">
-          Perizinan Publikasi Ormawa 2026
-        </a>
-
-        <!-- 5. Link Form Pengaduan -->
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdtj6rG_Mzua2GcJUnnMG8w8lcT-CpAsoJVh7ufV6ekwvmyYg/viewform" target="_blank" class="data-card">
-          Form Laporan Pengaduan IKM PNJ
-        </a>
-
-        <!-- 6. Link YouTube MPM PNJ -->
-        <a href="https://www.youtube.com/@mpmpnj" target="_blank" class="data-card">
-          YouTube MPM
-        </a>
-
+        @forelse($pusat_data as $data)
+          <a href="{{ $data->url_link }}" target="_blank" class="data-card">
+            {{ $data->nama_dokumen }}
+          </a>
+        @empty
+          <p style="grid-column: 1 / -1; color: #888; font-style: italic; padding: 20px;">
+            Belum ada arsip dokumen yang diunggah oleh pihak admin.
+          </p>
+        @endforelse
       </div>
     </section>
   </main>
